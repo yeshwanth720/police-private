@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Work</title>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { width: 80vw; height: 80vh; }
+    </style>
+</head>
+<body>
+    <h1>Map Work</h1>
+    <h1>Please wait for complaint</h1>
+    <div id="map"></div>
+     
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoieWVzaHdhbnRoLTIwMDIiLCJhIjoiY2x5ZzR0MW5yMDV2MzJqc2Q4bzJ6b3BmcCJ9.XTSGWy-RZXGe62M9EFzPTQ';
+
+        // Initialize map
+        let map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [0, 0], // Default center point
+            zoom: 2 // Default zoom level
+        });
+
+        // Add geolocation control to the map
+        map.addControl(new mapboxgl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true,
+            },
+            trackUserLocation: true
+        }));
+
+        // Initialize marker with initial coordinates
+        const marker = new mapboxgl.Marker({
+            draggable: true
+        }).setLngLat([0, 0]).addTo(map);
+        const socket = io();
+        // Watch for geolocation updates
+        navigator.geolocation.watchPosition(position => {
+            const { latitude, longitude } = position.coords;
+            map.setCenter([longitude, latitude]);
+            map.setZoom(15);
+            marker.setLngLat([longitude, latitude]); // Update marker position
+            console.log([longitude, latitude]);
+            const data = {
+                user_id: localStorage.getItem('police_id'),
+                location: {
+                    type: "Point",
+                    coordinates: [longitude, latitude]
+                }
+            };
+            socket.emit("message", data); // Emit location data to server
+
+        }, err => {
+            console.error(err);
+        });
+    </script>
+</body>
+</html>

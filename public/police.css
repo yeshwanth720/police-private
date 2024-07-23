@@ -1,0 +1,120 @@
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+::selection{
+  background: #68bb62;
+  color: #000;
+}
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  background-color: #282c34; /* Dark background for dark theme */
+  color: #fff; /* Light text for better contrast */
+}
+
+/* Container Styles */
+.container {
+  display: flex;
+  min-height: 100vh; /* Ensure full viewport height on small screens */
+  width: 100%;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  /* Adjust layout for smaller screens */
+  .container {
+    flex-direction: column; /* Stack map and form on top of each other */
+  }
+
+  #map {
+    width: 100%; /* Take full width on smaller screens */
+    height: 50vh; /* Adjust height as needed */
+    margin-bottom: 20px; /* Adjust margins for spacing */
+  }
+
+  .form-container {
+    width: 100%; /* Take full width on smaller screens */
+    margin-top: 20px; /* Adjust margins for spacing */
+  }
+}
+
+/* Map Styles */
+#map {
+  flex: 0 0 60%; /* Maintain 60% width for map */
+  height: calc(100vh - 100px); /* Set height excluding margins and bottom space */
+  margin-left: 40px;
+  margin-top: 50px;
+  background-color: #282c34; /* Match background color to body */
+}
+
+/* Form Container Styles */
+.form-container {
+  flex: 0 0 36%; /* Maintain 40% width for form */
+  margin-left: 20px; 
+  /* display:flex; */
+  /* justify-content: center; */
+  /* align-items: center;
+  Add margin to separate map and form */
+  padding: 20px;
+  background-color: #282c34; /* Match background color to body and map */
+  color: #fff; /* Light text for form elements */
+}
+
+.form-container h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container label {
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-container input,
+.form-container textarea {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #444; /* Adjust border color for dark theme */
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #2e323b; /* Darker background for input fields */
+  color: #fff; /* Light text for input fields */
+}
+
+.form-container button {
+  padding: 10px 20px;
+  background-color: #67cd6e; /* Maintain green for positive action */
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.form-container button:hover {
+  background-color: #5cb85c;
+}
+
+#btn {
+  margin-top: 30px;
+}
+
+#mapStyle {
+  height: 5vh;
+  font-family: "Poppins", sans-serif;
+  font-size: medium;
+}
+
+/* Additional Styles for Police-specific Pages */
+/* Add your specific styles for police login/logout pages here */

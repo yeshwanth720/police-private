@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Form</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;500;600;700&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../public/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <h1 class="navbar-heading">Indian Police Complaint App</h1>
+  </nav>
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card p-4 shadow-lg" style="width: 100%; max-width: 800px; ">
+      <div class="card-body">
+        <h2 class="card-title text-center mb-4">Register</h2>
+        <form id="userForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">  
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter name" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="user_id">Aadhaar ID</label>
+                <input type="text" class="form-control" id="user_id" placeholder="Enter user ID" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="role">Role</label>
+                <select class="form-control" id="role" required>
+                  <option value="">Select Role</option>
+                  <option value="police">Police</option>
+                  <option value="public">Public</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter email" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Phone_number">Phone Number</label>
+                <input type="text" class="form-control" id="Phone_number" placeholder="Enter phone number" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
+              </div>
+            </div>
+          </div>
+          <button id="btn" type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+        <div id="message" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Axios library -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Custom JavaScript -->
+  <script>
+    let btn = document.querySelector('button');
+    btn.addEventListener('click', async function(event) {
+      event.preventDefault(); // Prevent the form from submitting the default way
+      let name = document.getElementById('name').value;
+      let user_id = document.getElementById('user_id').value;
+      let role = document.getElementById('role').value;
+      let email = document.getElementById('email').value;
+      let Phone_number = document.getElementById('Phone_number').value;
+      let Password = document.getElementById('password').value;
+      let confirmPassword = document.getElementById('confirmPassword').value;
+      console.log(name);
+      const messageElement = document.getElementById('message');
+      messageElement.innerHTML = ''; // Clear previous messages
+      try {
+        const response = await axios.post('/api/register', {name, user_id, role, email, Phone_number, Password, confirmPassword});
+        console.log(response.status);
+        if (response.status === 200) {
+          messageElement.innerHTML = '<div class="alert alert-success">User has been created successfully.</div>';
+          window.location.href = '/api/main';
+        } else if (response.status === 400) {
+          messageElement.innerHTML = '<div class="alert alert-warning">User with this email already exists.</div>';
+        } else if (response.status === 500) {
+          messageElement.innerHTML = '<div class="alert alert-danger">Error: ' + response.data.message + '</div>';
+        }
+      } catch (error) {
+        if (error.response) {
+          // The request was made and the server responded with a status code that falls out of the range of 2xx
+          messageElement.innerHTML = '<div class="alert alert-danger">Error: ' + error.response.data.message + '</div>';
+        } else if (error.request) {
+          // The request was made but no response was received
+          messageElement.innerHTML = '<div class="alert alert-warning">No response received from the server.</div>';
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          messageElement.innerHTML = '<div class="alert alert-danger">An error occurred: ' + error.message + '</div>';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

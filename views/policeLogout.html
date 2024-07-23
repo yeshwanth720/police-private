@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Police Logout</title>
+  <link rel="stylesheet" href="../public/main.css">
+</head>
+<body>
+  <div class="container">
+    <div id="map"></div>
+    <div class="form-container">
+      <h1>Police Logout</h1>
+      <form id="logoutForm">
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" name="userId" required>
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="userId" required>
+        <button type="submit" id="logoutBtn">Logout</button>
+      </form>
+      <div id="message" class="mt-3"></div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+  <script>
+    // Handle logout form submission
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoieWVzaHdhbnRoLTIwMDIiLCJhIjoiY2x5ZzR0MW5yMDV2MzJqc2Q4bzJ6b3BmcCJ9.XTSGWy-RZXGe62M9EFzPTQ';
+
+    // Initialize Mapbox map
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11', // Replace with your preferred map style
+      center: [0, 0], // Default center coordinates
+      zoom: 10 // Default zoom level
+    });
+
+    // Add geolocation control to show user's location on the map
+    map.addControl(new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      trackUserLocation: true
+    }));
+
+    navigator.geolocation.getCurrentPosition(position => {
+      const { latitude, longitude } = position.coords;
+      map.setCenter([longitude, latitude]);
+      map.setZoom(14);
+
+      const marker = new mapboxgl.Marker({
+        draggable: true
+      }).setLngLat([longitude, latitude]).addTo(map);
+
+      function onDragEnd() {
+        const lngLat = marker.getLngLat();
+      }
+
+      marker.on('dragend', onDragEnd);
+    }, err => {
+      console.error(err);
+    });
+
+
+
+    document.getElementById('logoutForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const userId = document.getElementById('userId').value;
+      const password=document.getElementById('password').value;
+
+      const messageElement = document.getElementById('message');
+      messageElement.innerHTML = '';
+
+      try {
+        const response = await axios.post('/police/logout', { user_id: userId ,password:password});
+        if (response.status === 200) {
+          messageElement.innerHTML = '<div class="alert alert-success">Logged out successfully.</div>';
+          localStorage.removeItem('police_id');
+        } else {
+          messageElement.innerHTML = '<div class="alert alert-warning">Logout failed.</div>';
+        }
+      } catch (error) {
+        messageElement.innerHTML = `<div class="alert alert-danger">${error.response ? error.response.data.message : error.message}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>

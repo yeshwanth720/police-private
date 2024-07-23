@@ -1,0 +1,205 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;500;600;700&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  /* background: rgb(255, 255, 255); */
+  color: rgb(239, 143, 17);
+}
+
+::-moz-selection { /* For Firefox */
+  background: rgb(255, 255, 255);
+  color: rgb(76, 177, 111);
+}
+
+body {
+  display: flex;
+  background-color: #e8e3ee;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  padding-top: 100px; 
+  background-size: cover; 
+  /* Add padding to avoid overlap with the navbar */
+}
+
+.video-background {
+  opacity: 0.4;
+  position: fixed; /* Position fixed to cover the viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1; /* Place it behind the content */
+}
+
+#background-video {
+  position: absolute; /* Absolute position within its container */
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cover the entire container */
+  transform: translate(-50%, -50%); /* Center the video */
+}
+
+.navbar {
+  height: 100px;
+  background-color: #67cd6e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+#red{
+  color:red;
+}
+.card {
+  background-color: rgba(0, 0, 0, 1); /* Adjust the last value (alpha) for opacity */
+  color: white; /* Text color */
+  padding: 20px; /* Padding inside the card body */
+}
+.navbar-heading {
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  /* border:2px solid red; */
+}
+
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.overlay {
+  background-image: url('image/image.gif');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(46, 94, 109, 0.4) 40%,
+    rgba(46, 94, 109, 0)
+  );
+}
+
+.overlay-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.6);
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  max-height: 600px;
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.overlay-panel h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: none;
+}
+
+input[type="text"], input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #67cd6e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #4bb6b7;
+}
+
+@media screen and (min-width: 768px) {
+  .overlay-panel {
+    flex-direction: row;
+  }
+  
+  .form-container {
+    flex: 1;
+    padding: 40px;
+    margin-left: 20px;
+  }
+
+  .map-container {
+    flex: 1;
+    height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  #map {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+  }
+}

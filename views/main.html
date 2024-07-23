@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Page</title>
+  <link rel="stylesheet" href="../public/main.css">
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+</head>
+<body>
+  <div class="container">
+    <div id="map"></div>
+    
+    <div class="form-container">
+      <h1>Lodge a Complaint</h1>
+      <form id="complaintForm">
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" required>
+
+        <label for="complaint">Complaint:</label>
+        <textarea id="complaint" name="complaint" required></textarea>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" readonly required>
+
+        <label for="images">Upload Images:</label>
+        <input type="file" id="images" name="images" multiple>
+
+        <label for="mapStyle">Select Map Style:</label>
+        <select id="mapStyle" name="mapStyle">
+          <option value="mapbox/streets-v11">Streets</option>
+          <option value="mapbox/outdoors-v11">Outdoors</option>
+          <option value="mapbox/light-v10">Light</option>
+          <option value="mapbox/dark-v10">Dark</option>
+          <option value="mapbox/satellite-v9">Satellite</option>
+          <option value="mapbox/satellite-streets-v11">Satellite Streets</option>
+        </select>
+
+        <button type="submit" id="btn">Lodge Case</button>
+      </form>
+      <div id="message" class="mt-3"></div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+  <script src="../public/script.js"></script>
+  <script>
+    document.getElementById('complaintForm').addEventListener('submit', async function(event) {
+      event.preventDefault(); // Prevent the form from submitting the default way
+
+      const phoneNumber = document.getElementById('phoneNumber').value;
+      const complaint = document.getElementById('complaint').value;
+      const location = document.getElementById('location').value.split(',').map(Number);
+      const messageElement = document.getElementById('message');
+      messageElement.innerHTML = ''; // Clear previous messages
+
+      try {
+        const response = await axios.post('/api/complaint', {
+          phoneNumber,
+          complaint,
+          coordinates: location
+        });
+
+        if (response.status === 200) {
+          messageElement.innerHTML = '<div class="alert alert-success">Complaint Logged in successfully.</div>';
+          const nearbyPolice = encodeURIComponent(JSON.stringify(response.data.nearbyPolice));
+          console.log(response.data.message);
+          window.location.href = `/api/nearbyPolice`;
+          // window.location.href='/api/main'
+          // Redirect or take other actions after successful login
+        } else if (response.status === 400) {
+          messageElement.innerHTML = '<div class="alert alert-warning">Invalid data submitted.</div>';
+        } else if (response.status === 500) {
+          messageElement.innerHTML = '<div class="alert alert-danger">Error: ' + response.data.message + '</div>';
+        }
+      } catch (error) {
+        if (error.response) {
+          messageElement.innerHTML = '<div class="alert alert-danger">Error: ' + error.response.data.message + '</div>';
+        } else if (error.request) {
+          messageElement.innerHTML = '<div class="alert alert-warning">No response received from the server.</div>';
+        } else {
+          messageElement.innerHTML = '<div class="alert alert-danger">An error occurred: ' + error.message + '</div>';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

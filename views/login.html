@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../public/styles.css">
+</head>
+<body>
+  <!-- Video Background -->
+  <div class="video-background">
+    <video autoplay muted loop id="background-video">
+      <source src="../public/1108262237-preview.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <!-- Login Form -->
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card p-4 shadow-lg" style="width: 100%; max-width: 800px;">
+      <div class="card-body">
+        <h2 class="card-title text-center mb-4">Login</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" placeholder="Enter email" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+          </div>
+          <button id="btnLogin" type="submit" class="btn btn-primary btn-block">Login</button>
+          <p id="caution"style="color:red;">*please be aware of hackers while entering credentials</p>
+        </form>
+        <div id="message" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Axios library -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Custom JavaScript -->
+  <script>
+    let btnLogin = document.querySelector('#btnLogin');
+    btnLogin.addEventListener('click', async function(event) {
+      event.preventDefault(); // Prevent the form from submitting the default way
+      let email = document.getElementById('email').value;
+      let password = document.getElementById('password').value;
+      console.log(email);
+      const messageElement = document.getElementById('message');
+      const caution=document.getElementById('caution');
+      messageElement.innerHTML = ''; // Clear previous messages
+
+      try {
+        const response = await axios.post('/api/loggedin', { email, password });
+        console.log(response);
+        if (response.status === 200) {
+          caution.innerHTML='<div "></div>'
+          messageElement.innerHTML = '<div class="alert alert-success">Logged in successfully.</div>';
+          window.location.href='/api/main'
+          // Redirect or take other actions after successful login
+        } else if (response.status === 400) {
+          messageElement.innerHTML = '<div class="alert alert-warning">Invalid username or password.</div>';
+        } else if (response.status === 500) {
+          messageElement.innerHTML = '<div class="alert alert-danger">Error: ' + response.data.message + '</div>';
+        }
+      } catch (error) {
+        if (error.response) {
+          // The request was made and the server responded with a status code that falls out of the range of 2xx
+          messageElement.innerHTML = '<div class="alert alert-danger">Error: ' + error.response.data.message + '</div>';
+        } else if (error.request) {
+          // The request was made but no response was received
+          messageElement.innerHTML = '<div class="alert alert-warning">No response received from the server.</div>';
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          messageElement.innerHTML = '<div class="alert alert-danger">An error occurred: ' + error.message + '</div>';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
