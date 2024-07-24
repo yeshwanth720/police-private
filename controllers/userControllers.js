@@ -9,7 +9,7 @@ const accountSid = process.env.ACCOUNT_SID;
 const authToken = process.env.AUTH_TOKEN;
 const secretKey=process.env.SECRET_KEY;
 const client = require('twilio')(accountSid, authToken);
-
+// signup function of user
 async function postUserDB(req, res) {
     try {
         const { name, user_id, role, email, Phone_number, Password, confirmPassword } = req.body;
@@ -34,7 +34,7 @@ async function postUserDB(req, res) {
         });
     }
 }
-
+// login function of user.
 async function login(req, res) {
     try {
         let body = req.body;
@@ -73,11 +73,11 @@ async function login(req, res) {
         next(error); // Pass errors to the error handling middleware
     }
 }
-
+// function for rendering main.html,(shows or opens complaint box).
 function main(req, res) {
     res.sendFile(path.join(__dirname, '../views/main.html'));
 }
-
+// protectRoute will see the authentication.
 function protectRoute(req, res, next) {
     const token = req.cookies.loggedin;
     if (token) {
@@ -92,7 +92,7 @@ function protectRoute(req, res, next) {
         return res.status(401).sendFile(path.join(__dirname, '..', 'views', 'error.html'));
     }
 }
-
+// 
 async function userReport(req, res) {
     try {
         const { phoneNumber, complaint, coordinates } = req.body;

@@ -1,5 +1,5 @@
 const police = require('../models/Police');
-
+// this is for login of police.
 async function PoliceLogin(req, res) {
   try {
     const { user_id, password,location } = req.body;
@@ -39,7 +39,7 @@ async function PoliceLogin(req, res) {
     });
   }
 }
-
+// logout of police
 async function PoliceLogout(req, res) {
   try {
     const { user_id,password } = req.body;
