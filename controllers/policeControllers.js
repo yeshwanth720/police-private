@@ -94,6 +94,8 @@ async function PoliceLogin(req, res) {
 }
 //---------------------------------------------------------------------------------------------------------------------------
 // logout of police
+
+//---------------------------------------------------------------------------------------------------------------------------
 async function PoliceLogout(req, res) {
   try {
     const { user_id,password } = req.body;
@@ -104,7 +106,8 @@ async function PoliceLogout(req, res) {
       });
     }
     if(userLogged)
-    {await police.findOneAndDelete({ user_id: user_id ,password:password});
+    { let person=await police.findOne({ user_id: user_id ,password:password});
+       person['isLoggedin']=false;
     res.status(200).send({
       message: 'Police logged out successfully'
     });}
