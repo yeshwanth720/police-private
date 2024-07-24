@@ -1,4 +1,44 @@
 const police = require('../models/Police');
+const JWT = require('jsonwebtoken');
+const secretKey=process.env.SECRET_KEY;
+require('dotenv').config();
+//---------------------------------------------------------------------------------------------
+// police signup
+async function postpoliceDB(req, res) {
+  try {
+    const { user_id, password, confirmPassword, location } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        message: 'Passwords do not match'
+      });
+    }
+
+    const policePost = await police.create({
+      user_id: user_id,
+      occupied: false,
+      password: password,
+      isLoggedin:false,
+      location: location
+    });
+
+    res.status(200).json({
+      message: 'Police created successfully',
+      police: policePost
+    });
+  } catch (err) {
+    console.error('Error creating Police:', err.message);
+    res.status(400).json({
+      message: 'Error creating Police',
+      error: err.message
+    });
+  }
+}
+// this function will be producing the police from request and storing it in the database
+//----------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------------------------------------
 // this is for login of police.
 async function PoliceLogin(req, res) {
   try {
@@ -16,16 +56,29 @@ async function PoliceLogin(req, res) {
      
     if (policePost) {
       // Update the location if the officer is already logged in
-
+      policePost['isLoggedin']=true,
       policePost.location = location;
       await policePost.save();
-    } else {
-      // Create a new entry if the officer is not logged in
-      policePost = await police.create({
-        user_id: user_id,
-        password:password,
-        location: location
-      });
+      let payload = { user_id: policePost['user_id']};
+
+                let token = await new Promise((resolve, reject) => {
+                    JWT.sign(payload, secretKey, (err, token) => {
+                        if (err) {
+                            console.error('Error creating JWT:', err);
+                            reject(err);
+                        } else {
+                            resolve(token);
+                        }
+                    });
+                });
+
+      res.cookie('policeLogin', token, { maxAge: 3600000, httpOnly: true, secure: true });
+    } 
+    else{
+      res.status(400).send({
+        message:'user is not valid',
+        user:null
+      })
     }
     res.status(200).send({
       message: 'Police logged in successfully',
@@ -39,6 +92,7 @@ async function PoliceLogin(req, res) {
     });
   }
 }
+//---------------------------------------------------------------------------------------------------------------------------
 // logout of police
 async function PoliceLogout(req, res) {
   try {
@@ -49,10 +103,6 @@ async function PoliceLogout(req, res) {
         message: 'Invalid input data format'
       });
     }
-
-    // Remove the police officer from the collection
-    let userLogged=await police.findOne({user_id:user_id,password:password});
-
     if(userLogged)
     {await police.findOneAndDelete({ user_id: user_id ,password:password});
     res.status(200).send({
@@ -73,4 +123,25 @@ async function PoliceLogout(req, res) {
   }
 }
 
-module.exports = { PoliceLogin, PoliceLogout };
+module.exports = { PoliceLogin, PoliceLogout ,postpoliceDB};
+
+
+// let payload = { user_id: policePost['user_id']};
+
+//                 let token = await new Promise((resolve, reject) => {
+//                     JWT.sign(payload, secretKey, (err, token) => {
+//                         if (err) {
+//                             console.error('Error creating JWT:', err);
+//                             reject(err);
+//                         } else {
+//                             resolve(token);
+//                         }
+//                     });
+//                 });
+
+//res.cookie('loggedin', token, { maxAge: 3600000, httpOnly: true, secure: true });
+
+
+
+
+

@@ -15,6 +15,10 @@ const PoliceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isLoggedin:{
+    type:Boolean,
+    default:false
+  },
   location: {
     type: {
       type: String,

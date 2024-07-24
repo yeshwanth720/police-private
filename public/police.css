@@ -7,6 +7,13 @@
   background: #68bb62;
   color: #000;
 }
+
+.fix{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  /* border:2px solid red; */
+}
 body,
 html {
   margin: 0;
@@ -16,13 +23,17 @@ html {
   font-family: "Poppins", sans-serif;
   background-color: #282c34; /* Dark background for dark theme */
   color: #fff; /* Light text for better contrast */
+  /* border:2px solid red; */
 }
 
 /* Container Styles */
 .container {
-  display: flex;
   min-height: 100vh; /* Ensure full viewport height on small screens */
   width: 100%;
+  /* border:2px solid red; */
+  display:flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Media Queries for Responsiveness */
@@ -41,6 +52,7 @@ html {
   .form-container {
     width: 100%; /* Take full width on smaller screens */
     margin-top: 20px; /* Adjust margins for spacing */
+  
   }
 }
 
@@ -61,9 +73,11 @@ html {
   /* justify-content: center; */
   /* align-items: center;
   Add margin to separate map and form */
+
   padding: 20px;
   background-color: #282c34; /* Match background color to body and map */
   color: #fff; /* Light text for form elements */
+  /* border:2px solid red; */
 }
 
 .form-container h1 {
@@ -101,7 +115,12 @@ html {
   font-size: 16px;
   cursor: pointer;
 }
-
+#occupied{
+  height:35px;
+}
+#isLoggedin{
+  height:35px;
+}
 .form-container button:hover {
   background-color: #5cb85c;
 }
