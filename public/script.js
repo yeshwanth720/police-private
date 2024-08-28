@@ -2,24 +2,25 @@ mapboxgl.accessToken = 'pk.eyJ1IjoieWVzaHdhbnRoLTIwMDIiLCJhIjoiY2x5ZzR0MW5yMDV2M
 let map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/streets-v11',
-  center: [0, 0], // Default center point
-  zoom: 2 // Default zoom level
+  center: [0, 0], 
+  zoom: 2 
 });
+
 map.addControl(new mapboxgl.GeolocateControl({
   positionOptions: {
     enableHighAccuracy: true,
   },
   trackUserLocation: true
 }));
-
-navigator.geolocation.watchPosition(position => {
+navigator.geolocation.getCurrentPosition(position => {
   const { latitude, longitude } = position.coords;
   map.setCenter([longitude, latitude]);
   map.setZoom(15);
-  console.log({longitude, latitude})
-  const marker = new mapboxgl.Marker({
-    draggable: true
-  }).setLngLat([longitude, latitude]).addTo(map);
+  console.log({longitude, latitude});
+
+  const marker = new mapboxgl.Marker({ color: 'red', draggable: true })
+    .setLngLat([longitude, latitude])
+    .addTo(map);
 
   function onDragEnd() {
     const lngLat = marker.getLngLat();
@@ -34,10 +35,7 @@ navigator.geolocation.watchPosition(position => {
   console.error(err);
 });
 
-
 document.getElementById('mapStyle').addEventListener('change', function() {
   const style = this.value;
   map.setStyle(`mapbox://styles/${style}`);
 });
-
-

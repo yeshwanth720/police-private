@@ -42,56 +42,61 @@ async function postpoliceDB(req, res) {
 // this is for login of police.
 async function PoliceLogin(req, res) {
   try {
-    const { user_id, password,location } = req.body;
+    const { user_id, password, location } = req.body;
 
     // Validate input data
-    if (!user_id || !location || !password||!Array.isArray(location.coordinates) || location.coordinates.length !== 2) {
+    if (!user_id || !location || !password || !Array.isArray(location.coordinates) || location.coordinates.length !== 2) {
       return res.status(400).json({
         message: 'Invalid input data format'
       });
     }
 
     // Check if the police officer is already logged in
-    let policePost = await police.findOne({ user_id: user_id,password:password });
-     
+    let policePost = await police.findOne({ user_id: user_id, password: password });
+
     if (policePost) {
       // Update the location if the officer is already logged in
-      policePost['isLoggedin']=true,
+      policePost.isLoggedin = true;
       policePost.location = location;
       await policePost.save();
-      let payload = { user_id: policePost['user_id']};
 
-                let token = await new Promise((resolve, reject) => {
-                    JWT.sign(payload, secretKey, (err, token) => {
-                        if (err) {
-                            console.error('Error creating JWT:', err);
-                            reject(err);
-                        } else {
-                            resolve(token);
-                        }
-                    });
-                });
+      let payload = { user_id: policePost.user_id };
+      
+      let token = await new Promise((resolve, reject) => {
+        JWT.sign(payload, secretKey, (err, token) => {
+          if (err) {
+            console.error('Error creating JWT:', err);
+            reject(err);
+          } else {
+            resolve(token);
+          }
+        });
+      });
 
+      // Set the cookie and send the response
       res.cookie('policeLogin', token, { maxAge: 3600000, httpOnly: true, secure: true });
-    } 
-    else{
-      res.status(400).send({
-        message:'user is not valid',
-        user:null
-      })
+      
+      // Send successful response
+      return res.status(200).send({
+        message: 'Police logged in successfully',
+        user: policePost
+      });
+    } else {
+      // User not valid
+      return res.status(400).send({
+        message: 'User is not valid',
+        user: null
+      });
     }
-    res.status(200).send({
-      message: 'Police logged in successfully',
-      user: policePost
-    });
   } catch (err) {
     console.error('Error logging in Police:', err.message);
-    res.status(400).json({
+    return res.status(400).json({
       message: 'Error logging in Police',
       error: err.message
     });
   }
 }
+
 //---------------------------------------------------------------------------------------------------------------------------
 // logout of police
 
@@ -105,10 +110,11 @@ async function PoliceLogout(req, res) {
         message: 'Invalid input data format'
       });
     }
-    if(userLogged)
-    { let person=await police.findOne({ user_id: user_id ,password:password});
-       person['isLoggedin']=false;
-    res.status(200).send({
+    let person=await police.findOne({ user_id: user_id ,password:password});
+    
+    if(person)
+    {  person["isLoggedin"]=false;
+      res.status(200).send({
       message: 'Police logged out successfully'
     });}
     else{
@@ -125,7 +131,7 @@ async function PoliceLogout(req, res) {
     });
   }
 }
-
+//----------------------------------------------------------------------------------------------------------------------------
 module.exports = { PoliceLogin, PoliceLogout ,postpoliceDB};
 
 

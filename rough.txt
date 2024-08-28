@@ -1,0 +1,8 @@
+MVC architecture--> models , views, controllers.
+
+
+perks-->
+Separation of Concerns: MVC architecture divides the application into three components—Model, View, and Controller—promoting modularity and easier maintenance by separating the business logic, user interface, and control flow.
+
+Scalability and Flexibility: It allows developers to work on different layers independently, making the application scalable and adaptable to changes with minimal disruption across the system.
+

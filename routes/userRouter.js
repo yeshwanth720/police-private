@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const {getMailer}=require('../utils/mailer');
 const {postUserDB,login,main,protectRoute,userReport,nearPolicePosted} = require('../controllers/userControllers');
 
 const userRouter = express.Router();
@@ -19,8 +20,11 @@ userRouter.get('/logout', (req, res) => {
     res.clearCookie('isloggedin');
     res.status(200).json({ message: 'Logout successful' });
   });
-
-  
+userRouter.post('/send-mail',(req,res)=>{
+  const { email, subject } = req.body;
+  getMailer(email,subject);
+  res.status(200).json({ message: 'Feedback sent!' });
+});
 
   userRouter.get('/nearPolicePost',nearPolicePosted);
 // Handle POST requests to /register

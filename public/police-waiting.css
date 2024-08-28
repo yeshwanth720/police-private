@@ -1,19 +1,14 @@
+/* Import Font */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;500;600;700&display=swap");
+::selection{
+  background: #68bb62;
+  color: #000;
+}
 /* Global Styles */
 * {
   box-sizing: border-box;
 }
 
-::selection{
-  background: #68bb62;
-  color: #000;
-}
- 
-.fix{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  /* border:2px solid red; */
-}
 body,
 html {
   margin: 0;
@@ -23,17 +18,13 @@ html {
   font-family: "Poppins", sans-serif;
   background-color: #282c34; /* Dark background for dark theme */
   color: #fff; /* Light text for better contrast */
-  /* border:2px solid red; */
 }
 
 /* Container Styles */
 .container {
+  display: flex;
   min-height: 100vh; /* Ensure full viewport height on small screens */
   width: 100%;
-  /* border:2px solid red; */
-  display:flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* Media Queries for Responsiveness */
@@ -44,43 +35,37 @@ html {
   }
 
   #map {
-    width: 100%; /* Take full width on smaller screens */
-    height: 50vh; /* Adjust height as needed */
-    margin-bottom: 20px; /* Adjust margins for spacing */
-    border:3px solid #68bb62;
-    
+    flex: 1 0 100%; /* Take full width on smaller screens */
+    margin: 0 0 20px; /* Adjust margins for vertical layout */
   }
 
   .form-container {
-    width: 100%; /* Take full width on smaller screens */
-    margin-top: 20px; /* Adjust margins for spacing */
-  
+    flex: 1 0 100%; /* Take full width on smaller screens */
+    margin: 20px 0 0; /* Adjust margins for vertical layout */
   }
 }
 
 /* Map Styles */
 #map {
-  flex: 0 0 60%; /* Maintain 60% width for map */
-  height: calc(100vh - 100px); /* Set height excluding margins and bottom space */
-  margin-left: 40px;
-  margin-top: 50px;
+  flex: 0 0 60%; /* Maintain 60% width for responsive form */
+  height: calc(100vh - 100px); 
+  /* Set height excluding margins and bottom space */
+  /* margin: 20px  30px; Add margins on sides and bottom */
+  margin-left:40px;
+  /* width: 30vw; */
+  margin-top:50px;
   background-color: #282c34; /* Match background color to body */
-  border:3px solid #68bb62;
 }
 
 /* Form Container Styles */
 .form-container {
-  flex: 0 0 36%; /* Maintain 40% width for form */
-  margin-left: 20px; 
-  /* display:flex; */
-  /* justify-content: center; */
-  /* align-items: center;
-  Add margin to separate map and form */
-
+  flex: 0 0 37%; /* Maintain 40% width for form */
+  display: flex;
+  flex-direction: column;
   padding: 20px;
   background-color: #282c34; /* Match background color to body and map */
-  color: #fff; /* Light text for form elements */
-  /* border:2px solid red; */
+  color: #fff; 
+  /* Light text for form elements */
 }
 
 .form-container h1 {
@@ -118,25 +103,22 @@ html {
   font-size: 16px;
   cursor: pointer;
 }
-#occupied{
-  height:35px;
-}
-#isLoggedin{
-  height:35px;
-}
+
 .form-container button:hover {
   background-color: #5cb85c;
 }
 
-#btn {
-  margin-top: 30px;
+#btn{
+  margin-top:30px;
 }
 
-#mapStyle {
+#mapStyle{
   height: 5vh;
   font-family: "Poppins", sans-serif;
-  font-size: medium;
+  font-size:medium;
 }
-
-/* Additional Styles for Police-specific Pages */
-/* Add your specific styles for police login/logout pages here */
+#center{
+    display:flex;
+    justify-content: center;
+    align-items:center;
+}

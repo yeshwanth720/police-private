@@ -34,6 +34,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api/signup">Signup</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -89,8 +92,8 @@
 
     <section id="contact" class="contact">
         <div class="container">
-            <h2>Contact Us</h2>
-            <form action="/contact" method="POST" class="contact-form">
+            <h2>Contact Us/Feed back</h2>
+            <form  class="contact-form">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" class="form-control" required>
@@ -103,7 +106,7 @@
                     <label for="message">Message:</label>
                     <textarea id="message" name="message" rows="4" class="form-control" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Send Message</button>
+                <button type="submit" id="formed" class="btn btn-primary">Send Message</button>
             </form>
         </div>
     </section>
@@ -114,6 +117,54 @@
         <p>&copy; 2024 Police Complaint System. All rights reserved.</p>
     </div>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      let btn = document.getElementById('formed'); // Ensure the button exists
+      console.log('hello');
+      
+      if (btn) {
+        btn.addEventListener('click', async function(event) {
+          event.preventDefault(); // Prevent the form from submitting the default way
+          
+          let name = document.getElementById('name').value;
+          let email = document.getElementById('email').value;
+          let subject = document.getElementById('message').value;
+          console.log(email );
+          console.log(subject);
+          
+          let messageElement = document.createElement('div');
+          document.querySelector('.contact-form').appendChild(messageElement);
+          messageElement.innerHTML = ''; 
+          
+          try {
+            const response = await axios.post('/api/send-mail', { email, subject });
+            console.log(response.status);
+            
+            if (response.status === 200) {
+              messageElement.innerHTML = '<div class="alert alert-success">Posted Successfully</div>';
+              window.location.href = `/`;
+            } else if (response.status === 400) {
+              messageElement.innerHTML = '<div class="alert alert-warning">User mail not posted</div>';
+            } else if (response.status === 500) {
+              messageElement.innerHTML = '<div class="alert alert-danger">Error: ' + response.data.message + '</div>';
+            }
+          } catch (error) {
+            if (error.response) {
+              messageElement.innerHTML = '<div class="alert alert-danger">Error: ' + error.response.data.message + '</div>';
+            } else if (error.request) {
+              messageElement.innerHTML = '<div class="alert alert-warning">No response received from the server.</div>';
+            } else {
+              messageElement.innerHTML = '<div class="alert alert-danger">An error occurred: ' + error.message + '</div>';
+            }
+          }
+        });
+      } else {
+        console.error('Button with id="formed" not found!');
+      }
+    });
+  </script>
+  
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>

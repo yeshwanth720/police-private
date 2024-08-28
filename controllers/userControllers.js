@@ -174,7 +174,7 @@ async function findNearbyPolice(longitude, latitude) {
                 $geoNear: {
                     near: { type: "Point", coordinates: [longitude, latitude] },
                     distanceField: "distance",
-                    maxDistance: 100000, // Maximum distance in meters
+                    maxDistance: 100000, 
                     spherical: true,
                     query: {occupied:false}, // Optional: Additional query conditions for police collection
                     includeLocs: "location",
